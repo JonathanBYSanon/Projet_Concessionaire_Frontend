@@ -41,6 +41,7 @@
 </template>
 
 <script>
+    import { useAuthStore } from '../stores/auth';
     import apiClient from '../services/api';
 
     export default {
@@ -59,8 +60,11 @@
                 password: this.password,
                 });
 
-                // Store the token in localStorage
-                localStorage.setItem('token', response.data.token);
+                const { token, role } = response.data;
+
+                // Mettre à jour Pinia avec les informations d'authentification
+                const authStore = useAuthStore();
+                authStore.setAuth({ token, role });
 
                 // Redirect to the home page
                 this.$router.push('/home');
@@ -72,8 +76,8 @@
             },
         },
         mounted() {
-            // Deconnecte l'utilisateur s'il est déjà connecté
-            localStorage.clear();
+          const authStore = useAuthStore();
+          authStore.logout(); // Déconnexion via Pinia
         },
     };
 
