@@ -1,7 +1,14 @@
 <template>
     <div class="container mt-5">
       <h2 class="text-center">{{ title }}</h2>
-      <form @submit.prevent="$emit('submit', formData)">
+
+      <!-- Messages d'erreurs globaux -->
+      <div v-if="errors.global && errors.global.length" class="alert alert-danger">
+        <ul>
+          <li v-for="(error, index) in errors.global" :key="index">{{ error }}</li>
+        </ul>
+      </div>
+      <form @submit.prevent="handleSubmit">
         <div v-for="(field, index) in fields" :key="index" class="mb-3">
           <label :for="field.name" class="form-label">{{ field.label }}</label>
   
@@ -28,6 +35,11 @@
               {{ option.text }}
             </option>
           </select>
+
+          <!-- Message d'erreur spécifique au champ -->
+          <div v-if="errors.fieldErrors[field.name]" class="text-danger mt-1">
+            {{ errors.fieldErrors[field.name] }}
+          </div>
         </div>
         <button type="submit" class="btn btn-primary w-100">{{ buttonText }}</button>
       </form>
@@ -52,6 +64,15 @@
       buttonText: {
         type: String,
         default: 'Soumettre',
+      },
+      errors: {
+        type: Object,
+        default: () => ({ global: [], fieldErrors: {} }),
+      },
+    },
+    methods: {
+      handleSubmit() {
+        this.$emit('submit', this.formData); // Émet un événement avec les données du formulaire
       },
     },
     data() {
