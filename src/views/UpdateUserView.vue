@@ -4,6 +4,7 @@
       :fields="fields"
       :initialData="user"
       :buttonText="isEditMode ? 'Mettre à Jour' : 'Créer'"
+      :errors="errors"
       @submit="handleSubmit"
     />
   </template>
@@ -40,6 +41,11 @@
           { name: 'password', label: 'Mot de passe', type: 'password', required: false },
         ],
         isEditMode: false,
+        isSubmitting: false,
+        errors: {
+          global: [],
+          fieldErrors: {},
+        },
       };
     },
     methods: {
@@ -63,20 +69,44 @@
         }
       },
       async handleSubmit(data) {
+        if (this.isSubmitting) {
+          return; // Empêche les soumissions multiples
+        }
+        this.isSubmitting = true; // Marque comme soumis
         const simpleData = toRaw(data);
         try {
           if (this.isEditMode) {
             if (!data.password) delete data.password; // Supprime le mot de passe s'il est vide
             await apiClient.put(`/utilisateur/${this.$route.params.id}`, { ...simpleData });
-            console.log(data);
+            alert('Utilisateur modifié avec succès.');
           } else {
             await apiClient.post('/utilisateur', { ...simpleData });
             alert('Utilisateur ajouté avec succès.');
           }
           this.$router.push('/admin/utilisateurs');
         } catch (error) {
-          console.error('Erreur lors de la soumission :', error);
+            if (error.response && error.response.status === 400) {
+              this.errors = this.processValidationErrors(error.response.data.errors);
+            } else {
+              this.errors.global = ['Une erreur inattendue est survenue. Veuillez réessayer.'];
+            }
+        } finally {
+          this.isSubmitting = false; // Réinitialise la protection
         }
+      },
+      processValidationErrors(apiErrors) {
+          const structuredErrors = { global: [], fieldErrors: {} };
+
+          apiErrors.forEach((err) => {
+            if (err.param) {
+              // Erreur pour un champ spécifique
+              structuredErrors.fieldErrors[err.param] = err.msg;
+            } else {
+              // Erreur globale
+              structuredErrors.global.push(err.msg);
+            }
+        });
+        return structuredErrors;
       },
     },
     mounted() {
