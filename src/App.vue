@@ -15,10 +15,31 @@ import HelloWorld from './components/HelloWorld.vue'
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <RouterLink to="/home" class="nav-link">Acceuil</RouterLink>
+              <RouterLink to="/home" class="nav-link border-end">Acceuil</RouterLink>
             </li>
+            <li v-if="isAdmin" class="nav-item dropdown border-end">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="userDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Gestion Utilisateurs
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li class="dropdown-item">
+                  <RouterLink to="/admin/utilisateurs" class="nav-link border-bottom">Gérer Utilisateurs</RouterLink>
+                </li>
+                <li class="dropdown-item">
+                  <RouterLink to="/admin/roles" class="nav-link border-bottom">Gérer Rôles</RouterLink>
+                </li>
+              </ul>
+            </li>
+            
             <li class="nav-item">
-              <RouterLink to="/" class="nav-link">Deconnexion</RouterLink>
+              <RouterLink to="/" class="nav-link border-end">Deconnexion</RouterLink>
             </li>
           </ul>
         </div>
@@ -37,6 +58,23 @@ import HelloWorld from './components/HelloWorld.vue'
   </footer>
 
 </template>
+
+<script>
+  import { useAuthStore } from './stores/auth';
+
+  export default {
+    computed: {
+      isAdmin() {
+        const authStore = useAuthStore();
+        return authStore.isAdmin; // Accès au getter du store
+      },
+    },
+    mounted() {
+      const authStore = useAuthStore();
+      authStore.loadFromLocalStorage(); // Charger les données stockées
+    },
+  };
+</script>
 
 <style scoped>
   header {
