@@ -37,7 +37,32 @@ import HelloWorld from './components/HelloWorld.vue'
                 </li>
               </ul>
             </li>
-            
+            <li class="nav-item dropdown border-end">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="userDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+              Gestion Autres
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li class="dropdown-item">
+                  <RouterLink to="/modeles" class="nav-link border-bottom">Gérer Modeles</RouterLink>
+                </li>
+                <li class="dropdown-item">
+                  <RouterLink to="/marques" class="nav-link border-bottom">Gérer Marques</RouterLink>
+                </li>
+                <li class="dropdown-item">
+                  <RouterLink to="/options" class="nav-link border-bottom">Gérer Options</RouterLink>
+                </li>
+                <li class="dropdown-item">
+                  <RouterLink to="/couleurs" class="nav-link border-bottom">Gérer Couleurs</RouterLink>
+                </li>
+              </ul>
+            </li>
             <li class="nav-item">
               <RouterLink to="/" class="nav-link border-end">Deconnexion</RouterLink>
             </li>

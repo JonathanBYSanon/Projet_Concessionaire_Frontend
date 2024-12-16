@@ -2,6 +2,7 @@
   <div class="justify-content-center align-items-center min-vh-100">
   <div id="car-carousel" class="container mt-5">
     <h2 class="text-center mb-4">Nos Voitures</h2>
+    <button class="btn btn-primary" @click="addCar">Ajouter une Voiture</button>
     <div v-if="loading" class="text-center">
       <p>Chargement des voitures...</p>
     </div>
@@ -36,6 +37,11 @@
                 <ul>
                   <li v-for="(option, index) in car.Options" :key="index">{{ option.nom }}</li>
                 </ul>
+
+                <div class="card-buttons">
+                  <button class="btn btn-warning btn-sm" @click="editCar(car)">Modifier</button>
+                  <button class="btn btn-danger btn-sm" @click="deleteCar(car.id)">Supprimer</button>
+                </div>
               </div>
             </div>
           </div>
@@ -86,6 +92,35 @@
           this.loading = false;
         }
       },
+      addCar() {
+        // Redirect to the car creation page
+        this.$router.push({ name: "add-voiture" });
+      },
+      editCar(car) {
+        // Navigate to the edit page
+        this.$router.push({ name: "edit-voiture", params: { id: car.id } });
+      },
+      async deleteCar(car) {
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce véhicule ?")) return;
+
+        try {
+          // Step 1: Delete the associated image
+          if (car.ImageId) {
+            await apiClient.delete(`/image/${car.ImageId}`);
+          }
+
+          // Step 2: Delete the voiture
+          await apiClient.delete(`/voiture/${car.id}`);
+
+          // Step 3: Update the local cars list
+          this.cars = this.cars.filter((c) => c.id !== car.id);
+          alert("Véhicule et image supprimés avec succès !");
+        } catch (error) {
+          console.error("Erreur lors de la suppression :", error);
+          alert("Une erreur est survenue lors de la suppression !");
+        }
+      },
+
     },
     mounted() {
       this.fetchCars();
@@ -113,6 +148,10 @@
   .carousel-control-prev-icon,
   .carousel-control-next-icon {
     background-color: lightgray;
+  }
+
+  .card-buttons button {
+    margin: 0 5px;
   }
 </style>
 

@@ -14,7 +14,7 @@
   
           <!-- Champs Texte / Email / Password -->
           <input
-            v-if="field.type !== 'select'"
+            v-if="field.type !== 'select' && field.type !== 'checkbox-group'"
             :type="field.type"
             v-model="formData[field.name]"
             class="form-control"
@@ -22,6 +22,26 @@
             :required="field.required"
             :placeholder="field.placeholder || ''"
           />
+
+          <!-- Checkbox Group -->
+          <div v-else-if="field.type === 'checkbox-group'" class="checkbox-group">
+            <div
+              v-for="option in field.options"
+              :key="option.value"
+              class="form-check form-check-inline"
+            >
+              <input
+                class="form-check-input"
+                type="checkbox"
+                :id="`${field.name}-${option.value}`"
+                :value="option.value"
+                v-model="formData[field.name]"
+              />
+              <label class="form-check-label" :for="`${field.name}-${option.value}`">
+                {{ option.text }}
+              </label>
+            </div>
+          </div>
   
           <!-- Champ Sélecteur -->
           <select
@@ -35,6 +55,8 @@
               {{ option.text }}
             </option>
           </select>
+
+          
 
           <!-- Message d'erreur spécifique au champ -->
           <div v-if="errors.fieldErrors[field.name]" class="text-danger mt-1">
