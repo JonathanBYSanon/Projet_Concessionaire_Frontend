@@ -173,7 +173,7 @@ export default {
       this.filteredCars = result;
     },
     addCar() {
-      this.$router.push({ name: "add-car" });
+      this.$router.push({ name: "add-voiture" });
     },
     editCar(car) {
       this.$router.push({ name: "edit-car", params: { id: car.id } });
