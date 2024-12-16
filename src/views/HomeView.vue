@@ -176,7 +176,7 @@ export default {
       this.$router.push({ name: "add-voiture" });
     },
     editCar(car) {
-      this.$router.push({ name: "edit-car", params: { id: car.id } });
+      this.$router.push({ name: "edit-voiture", params: { id: car.id } });
     },
     async deleteCar(car) {
       if (!confirm("Êtes-vous sûr de vouloir supprimer ce véhicule ?")) return;
