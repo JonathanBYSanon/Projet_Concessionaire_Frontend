@@ -87,7 +87,7 @@
                     alert(message);
                 } catch (error) {
                     if (error.response.status === 400) {
-                        this.errors = this.processValidationErrors(error.response.data);
+                        this.errors = this.processValidationErrors(error.response.data.errors);
                     } else {
                         this.errors.global = ['Une erreur est survenue. Veuillez réessayer.'];
                     }

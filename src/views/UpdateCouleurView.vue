@@ -74,10 +74,9 @@
                     alert(message);
                 } catch (error) {
                     if (error.response && error.response.status === 400) {
-                        this.errors = this.processValidationErrors(error.response.data);
+                        this.errors = this.processValidationErrors(error.response.data.errors);
                     } else {
-                        console.error('Erreur lors de la sauvegarde de la couleur :', error);
-                        message = 'Une erreur est survenue lors de la sauvegarde de la couleur.';
+                        this.errors.global.push('Une erreur s\'est produite lors de la soumission du formulaire.');
                     }
                 } finally {
                     this.isSubmitting = false;
