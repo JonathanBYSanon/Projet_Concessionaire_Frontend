@@ -102,6 +102,10 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <style scoped>
+  .container {
+    min-height: 80vh;
+  }
+
   header {
     position: sticky;
     top: 0;
@@ -109,7 +113,6 @@ import HelloWorld from './components/HelloWorld.vue'
   }
 
   footer {
-    position: sticky;
     bottom: 0;
     width: 100%;
     background-color: #f8f9fa; /* Bootstrap light background */
